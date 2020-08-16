@@ -1,0 +1,13 @@
+[
+{"id":201,"name":"woods","hechengitem":"","maxinbag":5,"cooktime":"","value":""},
+{"id":202,"name":"batteries","hechengitem":"","maxinbag":3,"cooktime":"","value":"501:15;503:10"},
+{"id":203,"name":"water","hechengitem":"","maxinbag":2,"cooktime":"","value":""},
+{"id":204,"name":"food","hechengitem":"","maxinbag":3,"cooktime":"","value":""},
+{"id":205,"name":"screws","hechengitem":"","maxinbag":5,"cooktime":"","value":""},
+{"id":206,"name":"gears","hechengitem":"","maxinbag":5,"cooktime":"","value":""},
+{"id":207,"name":"toolkit","hechengitem":"","maxinbag":3,"cooktime":"","value":""},
+{"id":208,"name":"iron","hechengitem":"","maxinbag":5,"cooktime":"","value":""},
+{"id":209,"name":"noodles","hechengitem":"203:4;204:5","maxinbag":1,"cooktime":4,"value":"501:20;503:15"},
+{"id":210,"name":"hamburger","hechengitem":"203:5;204:7","maxinbag":1,"cooktime":8,"value":"501:30;503:25"},
+{"id":211,"name":"roastchicken","hechengitem":"203:8;204:10","maxinbag":1,"cooktime":14,"value":"501:40;503:35"}
+]

@@ -1,0 +1,6 @@
+[
+{"ID":"101","name":"robot","energy":"100","mind":"100","power":"100"},
+{"ID":"102","name":"kid","energy":"85","mind":"120","power":"85"},
+{"ID":"103","name":"mechanist","energy":"100","mind":"100","power":"90"},
+{"ID":"104","name":"soldier","energy":"100","mind":"80","power":"110"}
+]
