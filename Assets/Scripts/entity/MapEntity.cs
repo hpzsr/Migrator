@@ -8,6 +8,8 @@ public class MapData
     public int point;
     public string Reward;
     public int energy;
+    public int floor;
+    public int nextFloorPoint;
 }
 
 public class MapEntity
@@ -44,4 +46,18 @@ public class MapEntity
 
 		return null;
 	}
+
+    public List<MapData> getDataByMapFloor(int map, int floor)
+    {
+        List<MapData> list = new List<MapData>();
+        for (int i = 0; i < materialsList.Count; i++)
+        {
+            if ((materialsList[i].map == map) && (materialsList[i].floor == floor))
+            {
+                list.Add(materialsList[i]);
+            }
+        }
+
+        return list;
+    }
 }

@@ -12,7 +12,7 @@ public class MaterialsData
     public string value;
 }
 
-public class MaterialsEntity : MonoBehaviour
+public class MaterialsEntity
 {
 	static MaterialsEntity s_instance = null;
 

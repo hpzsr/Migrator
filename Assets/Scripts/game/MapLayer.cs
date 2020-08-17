@@ -14,6 +14,7 @@ public class MapLayer : LayerBase
     public Image img_map;
     public Image img_atkRange;
 
+    int curMap = 2;
     int tili = 100;
     int curInSquare = 1;
     int atkRangeSquare = 0;
@@ -29,7 +30,7 @@ public class MapLayer : LayerBase
 
         initMap(1);
 
-        // Debug.Log("map:"+startData.data_int);
+        curMap = startData.data_int;
 
         // 方格点击事件
         for (int i = 0; i < squares.childCount; i++)
@@ -91,58 +92,49 @@ public class MapLayer : LayerBase
 
     void initMap(int floor)
     {
-        curInSquare = 1;
-        player.localPosition = squares.GetChild(0).localPosition;
-
-        for(int i = 0; i < searchPoint_list.Count; i++)
+        // 初始化 清空之前的
         {
-            Destroy(searchPoint_list[i].gameObject);
-        }
-        searchPoint_list.Clear();
+            curInSquare = 1;
+            player.localPosition = squares.GetChild(0).localPosition;
 
-        if(nextFloor)
-        {
-            Destroy(nextFloor.gameObject);
-            nextFloor = null;
-        }
-
-        if (enemy)
-        {
-            Destroy(enemy.gameObject);
-            enemy = null;
-        }
-
-        // 添加搜索点  脚印  敌人
-        {
-            if (floor == 1)
+            for (int i = 0; i < searchPoint_list.Count; i++)
             {
-                addSearchPoint(6);
-                addSearchPoint(14);
-                addSearchPoint(29);
-
-                setFloorPoint(1, 9);
-                addEnemy(1,8);
-                setAtkRange(1,8);
+                Destroy(searchPoint_list[i].gameObject);
             }
-            else if (floor == 2)
+            searchPoint_list.Clear();
+
+            if (nextFloor)
             {
-                addSearchPoint(4);
-                addSearchPoint(10);
-                addSearchPoint(25);
-
-                setFloorPoint(2, 17);
-                addEnemy(2, 15);
-                setAtkRange(2, 15);
+                Destroy(nextFloor.gameObject);
+                nextFloor = null;
             }
-            else if (floor == 3)
+
+            if (enemy)
             {
-                addSearchPoint(7);
-                addSearchPoint(20);
-                addSearchPoint(23);
-
-                addEnemy(3, 22);
-                setAtkRange(3, 22);
+                Destroy(enemy.gameObject);
+                enemy = null;
             }
+        }
+
+        List<MapData> list = MapEntity.getInstance().getDataByMapFloor(curMap,floor);
+
+        // 添加搜索点
+        for (int i = 0; i < list.Count; i++)
+        {
+            addSearchPoint(list[i].point);
+        }
+
+        // 添加脚印
+        if (list[0].nextFloorPoint != 0)
+        {
+            setFloorPoint(floor, list[0].nextFloorPoint);
+        }
+
+        // 添加敌人
+        if (list[0].energy != 0)
+        {
+            addEnemy(floor, list[0].energy);
+            setAtkRange(floor, list[0].energy);
         }
 
         showCanToSquare();

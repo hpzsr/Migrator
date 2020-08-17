@@ -150,6 +150,7 @@ public class ReadyFindLayer : LayerBase
                 GameData.getInstance().curGetRewardList.Clear();
                 Event.EventCallBackData data = new Event.EventCallBackData();
                 data.data_int = choiceMap;
+                data.data_int = 2;
                 LayerManager.showLayer(Consts.Layer.MapLayer, data);
 
                 onClickBack();
