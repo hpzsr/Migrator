@@ -21,7 +21,7 @@ public class FamilyLayer : LayerBase
     bool isBeyond19 = false;
 
     List<PlayerScript> list_player = new List<PlayerScript>();
-    PlayerScript curControlPlayer;
+    public PlayerScript curControlPlayer;
 
     public List<Transform> list_bed = new List<Transform>();
     public List<Transform> list_ladder = new List<Transform>();
@@ -29,6 +29,8 @@ public class FamilyLayer : LayerBase
     void Start()
     {
         s_instance = this;
+
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
 
         for (int i = 0; i < parts.childCount; i++)
         {
@@ -43,7 +45,7 @@ public class FamilyLayer : LayerBase
             {
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(getMousePosition());
+                    curControlPlayer.moveTo(false,getMousePosition());
                 });
             }
             else if (trans.tag == "Player")
@@ -73,7 +75,7 @@ public class FamilyLayer : LayerBase
                 list_bed.Add(trans);
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(false, trans.transform.localPosition, trans);
                 });
             }
             else if (trans.tag == "ladder")
@@ -84,28 +86,28 @@ public class FamilyLayer : LayerBase
             {
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(false, trans.transform.localPosition, trans);
                 });
             }
             else if (trans.tag == "heater")
             {
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(false, trans.transform.localPosition, trans);
                 });
             }
             else if (trans.tag == "kitchen")
             {
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(false, trans.transform.localPosition, trans);
                 });
             }
             else if (trans.tag == "find")
             {
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(false, trans.transform.localPosition, trans);
                 });
             }
         }

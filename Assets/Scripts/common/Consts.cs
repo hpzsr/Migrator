@@ -42,6 +42,7 @@ public class Consts
         BagLayer,
         ReadyFindLayer,
         MapLayer,
+        BackHomeLayer,
         NightLayer,
         ReadyNightLayer,
     }

@@ -22,10 +22,14 @@ public class FindLayer : LayerBase
 
     public static FindLayer s_instance = null;
 
+    bool isFromFamilyLayer = false;
+
     void Start()
     {
         s_instance = this;
-        if (startData.data_bool)
+
+        isFromFamilyLayer = startData.data_bool;
+        if (isFromFamilyLayer)
         {
             GameData.getInstance().curGetRewardList.Clear();
         }
@@ -303,7 +307,10 @@ public class FindLayer : LayerBase
         var getList = GameData.getInstance().curGetRewardList;
         for (int i = 0; i < getList.Count; i++)
         {
-            GameData.getInstance().changeBagItemCount(getList[i].key, getList[i].value);
+            if (isFromFamilyLayer)
+            {
+                GameData.getInstance().changeBagItemCount(getList[i].key, getList[i].value);
+            }
             itemScript.changeRewardListData(getList[i].key, -getList[i].value);
         }
 

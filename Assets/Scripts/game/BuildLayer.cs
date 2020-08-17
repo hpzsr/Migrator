@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -164,20 +165,25 @@ public class BuildLayer : LayerBase
             setMaterialList();
 
             checkUpgrade();
+
+            Destroy(gameObject);
         }
     }
 
     public void checkUpgrade()
     {
+        Transform upgrade = curTrans.Find("btn_upgrade");
         if (itemScript.level >= PartsEntity.getInstance().getMaxLevel(itemScript.id))
         {
             transform.Find("bg/btn_build").localScale = new Vector3(0, 0, 0);
             fullLevel.localScale = new Vector3(1,1,1);
+            upgrade.localScale = new Vector3(0,0,0);
         }
         else
         {
             transform.Find("bg/btn_build").localScale = new Vector3(1,1,1);
             fullLevel.localScale = new Vector3(0,0,0);
+            upgrade.localScale = new Vector3(1,1,1);
         }
     }
 }

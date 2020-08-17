@@ -64,6 +64,15 @@ public class ItemScript : MonoBehaviour
             }
         }
 
+        if(transform.Find("btn_upgrade") != null)
+        {
+            Button btn_upgrade = transform.Find("btn_upgrade").GetComponent<Button>();
+            btn_upgrade.onClick.AddListener(()=>
+            {
+                FamilyLayer.s_instance.curControlPlayer.moveTo(true, transform.localPosition, transform);
+            });
+        }
+
         if ((transform.tag != "ladder") && isSetPos)
         {
             transform.localPosition = new Vector3(transform.localPosition.x, FamilyLayer.s_instance.getFloorPosY(floor), 0);

@@ -54,7 +54,7 @@ public class MapEntity
         {
             if ((materialsList[i].map == map) && (materialsList[i].floor == floor))
             {
-                list.Add(materialsList[i]);
+				list.Add(materialsList[i]);
             }
         }
 

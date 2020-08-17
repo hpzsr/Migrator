@@ -70,7 +70,7 @@ public class PlayerScript : MonoBehaviour
     }
 
     // 移动到指定地点
-    public void moveTo(Vector2 targetPos,Transform targetTrans = null)
+    public void moveTo(bool isUpgrade,Vector2 targetPos,Transform targetTrans = null)
     {
         if(move_seq != null)
         {
@@ -141,7 +141,7 @@ public class PlayerScript : MonoBehaviour
         move_seq.Play().OnComplete(()=> {
             if(targetTrans != null)
             {
-                if (targetTrans.GetComponent<ItemScript>().isCanUpgrade)
+                if (targetTrans.GetComponent<ItemScript>().isCanUpgrade && isUpgrade)
                 {
                     var data = new Event.EventCallBackData();
                     data.data_transform = targetTrans;

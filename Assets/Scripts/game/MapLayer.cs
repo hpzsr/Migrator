@@ -144,7 +144,7 @@ public class MapLayer : LayerBase
     {
         GameObject obj = GameObject.Instantiate(searchPoint, searchPoints);
         obj.transform.localPosition = squares.Find("square_" + square).localPosition;
-        obj.transform.name = "find_1_" + (searchPoint_list.Count + 1);
+        obj.transform.name = "find_" + curMap + "_" + square;
         obj.GetComponent<ItemScript>().init(false);
 
         searchPoint_list.Add(obj.transform);
@@ -155,7 +155,7 @@ public class MapLayer : LayerBase
         GameObject obj = GameObject.Instantiate(searchPoint, searchPoints);
         obj.transform.tag = "enemy";
         obj.transform.localPosition = squares.Find("square_" + square).localPosition;
-        obj.transform.name = "find_1_" + (searchPoint_list.Count + 1);
+        obj.transform.name = "find_" + curMap + "_" + square;
         obj.GetComponent<Image>().sprite = CommonUtil.getSprite("Images/monster");
         obj.GetComponent<Image>().SetNativeSize();
 
@@ -171,7 +171,7 @@ public class MapLayer : LayerBase
         GameObject obj = GameObject.Instantiate(searchPoint, searchPoints);
         obj.transform.tag = "jiaoyin";
         obj.transform.localPosition = squares.Find("square_" + square).localPosition;
-        obj.transform.name = "find_1_" + (searchPoint_list.Count + 1);
+        obj.transform.name = "find_" + curMap + "_" + square;
         obj.GetComponent<Image>().sprite = CommonUtil.getSprite("Images/nextlevel");
         obj.GetComponent<Image>().SetNativeSize();
 
@@ -294,9 +294,16 @@ public class MapLayer : LayerBase
 
     public void onClickBack()
     {
+        // 把搜索的物品添加到背包
+        var getList = GameData.getInstance().curGetRewardList;
+        for (int i = 0; i < getList.Count; i++)
+        {
+            GameData.getInstance().changeBagItemCount(getList[i].key, getList[i].value);
+        }
+
         s_instance = null;
         Destroy(gameObject);
 
-        LayerManager.showLayer(Consts.Layer.ReadyNightLayer);
+        LayerManager.showLayer(Consts.Layer.BackHomeLayer);
     }
 }
