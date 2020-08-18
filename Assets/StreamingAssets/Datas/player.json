@@ -1,6 +1,6 @@
 [
-{"ID":"101","name":"robot","energy":"100","mind":"100","power":"100"},
-{"ID":"102","name":"kid","energy":"85","mind":"120","power":"85"},
-{"ID":"103","name":"mechanist","energy":"100","mind":"100","power":"90"},
-{"ID":"104","name":"soldier","energy":"100","mind":"80","power":"110"}
+{"id":101,"name":"robot","energy":100,"mind":100,"power":100,"bagCount":9},
+{"id":102,"name":"kid","energy":85,"mind":120,"power":85,"bagCount":10},
+{"id":103,"name":"mechanist","energy":100,"mind":100,"power":90,"bagCount":11},
+{"id":104,"name":"soldier","energy":100,"mind":80,"power":110,"bagCount":12}
 ]

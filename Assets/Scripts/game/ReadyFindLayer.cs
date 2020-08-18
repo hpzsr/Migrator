@@ -151,6 +151,7 @@ public class ReadyFindLayer : LayerBase
                 Event.EventCallBackData data = new Event.EventCallBackData();
                 data.data_int = choiceMap;
                 data.data_int = 2;
+                data.data_string = (100 + i + 1) + "";
                 LayerManager.showLayer(Consts.Layer.MapLayer, data);
 
                 onClickBack();

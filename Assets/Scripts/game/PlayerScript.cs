@@ -153,6 +153,7 @@ public class PlayerScript : MonoBehaviour
                     var data = new Event.EventCallBackData();
                     data.data_transform = targetTrans;
                     data.data_bool = true;
+                    data.data_string = playerID + "";
                     LayerManager.showLayer(Consts.Layer.FindLayer, data);
                 }
                 else if ((targetTrans.tag == "kitchen") || (targetTrans.tag == "workbench"))

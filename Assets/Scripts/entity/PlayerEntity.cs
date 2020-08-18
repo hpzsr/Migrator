@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class PlayerData
 {
-    public int ID;
+    public int id;
     public string name;
     public int energy;
     public int mind;
     public int power;
+	public int bagCount;
 }
 
 public class PlayerEntity
@@ -37,7 +38,7 @@ public class PlayerEntity
 	{
 		for(int i = 0; i < materialsList.Count; i++)
 		{
-			if(materialsList[i].ID == id)
+			if(materialsList[i].id == id)
 			{
 				return materialsList[i];
 			}

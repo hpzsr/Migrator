@@ -14,6 +14,7 @@ public class MapLayer : LayerBase
     public Image img_map;
     public Image img_atkRange;
 
+    int player_id;
     int curMap = 2;
     int tili = 100;
     int curInSquare = 1;
@@ -31,6 +32,7 @@ public class MapLayer : LayerBase
         initMap(1);
 
         curMap = startData.data_int;
+        player_id = int.Parse(startData.data_string);
 
         // 方格点击事件
         for (int i = 0; i < squares.childCount; i++)
@@ -62,6 +64,7 @@ public class MapLayer : LayerBase
                                     var data = new Event.EventCallBackData();
                                     data.data_transform = searchPoint_list[j];
                                     data.data_bool = false;
+                                    data.data_string = player_id + "";
                                     LayerManager.showLayer(Consts.Layer.FindLayer, data);
                                     break;
                                 }
@@ -211,6 +214,7 @@ public class MapLayer : LayerBase
                     var data = new Event.EventCallBackData();
                     data.data_transform = searchPoint_list[i];
                     data.data_bool = false;
+                    data.data_string = player_id + "";
                     LayerManager.showLayer(Consts.Layer.FindLayer, data);
                     return;
                 }
