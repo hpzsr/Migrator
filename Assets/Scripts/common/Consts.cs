@@ -45,5 +45,6 @@ public class Consts
         BackHomeLayer,
         NightLayer,
         ReadyNightLayer,
+        MakeLayer,
     }
 }

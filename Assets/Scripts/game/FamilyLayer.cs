@@ -53,7 +53,7 @@ public class FamilyLayer : LayerBase
                 PlayerScript playerScript = trans.GetComponent<PlayerScript>();
                 playerScript.init();
                 list_player.Add(playerScript);
-                trans.GetComponent<Button>().onClick.AddListener(() =>
+                trans.Find("btn_choice").GetComponent<Button>().onClick.AddListener(() =>
                 {
                     curControlPlayer = playerScript;
 

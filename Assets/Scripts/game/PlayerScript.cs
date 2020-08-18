@@ -141,7 +141,8 @@ public class PlayerScript : MonoBehaviour
         move_seq.Play().OnComplete(()=> {
             if(targetTrans != null)
             {
-                if (targetTrans.GetComponent<ItemScript>().isCanUpgrade && isUpgrade)
+                ItemScript itemScript = targetTrans.GetComponent<ItemScript>();
+                if (itemScript.isCanUpgrade && isUpgrade)
                 {
                     var data = new Event.EventCallBackData();
                     data.data_transform = targetTrans;
@@ -153,6 +154,21 @@ public class PlayerScript : MonoBehaviour
                     data.data_transform = targetTrans;
                     data.data_bool = true;
                     LayerManager.showLayer(Consts.Layer.FindLayer, data);
+                }
+                else if ((targetTrans.tag == "kitchen") || (targetTrans.tag == "workbench"))
+                {
+                    if (itemScript.level > 0)
+                    {
+                        var data = new Event.EventCallBackData();
+                        data.data_transform = targetTrans;
+                        LayerManager.showLayer(Consts.Layer.MakeLayer, data);
+                    }
+                    else
+                    {
+                        var data = new Event.EventCallBackData();
+                        data.data_transform = targetTrans;
+                        LayerManager.showLayer(Consts.Layer.BuildLayer, data);
+                    }
                 }
             }
         });

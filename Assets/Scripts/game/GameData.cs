@@ -37,7 +37,7 @@ public class GameData
         {
             for (int i = 0; i < MaterialsEntity.getInstance().dataList.Count; i++)
             {
-                myBagsList.Add(new PairData(MaterialsEntity.getInstance().dataList[i].id, 1000));
+                //myBagsList.Add(new PairData(MaterialsEntity.getInstance().dataList[i].id, 1000));
             }
         }
     }
