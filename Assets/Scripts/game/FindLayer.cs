@@ -14,6 +14,7 @@ public class FindLayer : LayerBase
     public Button btn_ok;
     
     List<PairData> waitGetList = new List<PairData>();
+    List<PairData> getFromCurPointList = new List<PairData>();
 
     Transform curChoiceItem_get = null;
     Transform curChoiceItem_waitGet = null;
@@ -23,6 +24,17 @@ public class FindLayer : LayerBase
     public static FindLayer s_instance = null;
 
     bool isFromFamilyLayer = false;
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            for(int i = 0; i < getFromCurPointList.Count; i++)
+            {
+                Debug.Log(getFromCurPointList[i].key + "  " + getFromCurPointList[i].value);
+            }
+        }
+    }
 
     void Start()
     {
@@ -47,12 +59,14 @@ public class FindLayer : LayerBase
                 }
             });
 
+            int index = i;
             temp.Find("delete").GetComponent<Button>().onClick.AddListener(() =>
             {
                 int id = int.Parse(temp.name.Split('_')[0]);
-                int count = int.Parse(temp.name.Split('_')[1]);
-                changeGetListData(id, -1);
-                changeWaitGetListData(id, 1);
+                int count = 1;
+                changeGetListData(id, -count, index);
+                changeWaitGetListData(id, count);
+                changeGetFromCurPointListData(id, count > curPointGetCountById(id) ? -curPointGetCountById(id) : -count);
                 refreshGroup();
             });
         }
@@ -73,9 +87,10 @@ public class FindLayer : LayerBase
             temp.Find("add").GetComponent<Button>().onClick.AddListener(() =>
             {
                 int id = int.Parse(temp.name.Split('_')[0]);
-                int count = int.Parse(temp.name.Split('_')[1]);
-                changeGetListData(id,1);
-                changeWaitGetListData(id, -1);
+                int count = 1;
+                changeGetListData(id, count);
+                changeWaitGetListData(id, -count);
+                changeGetFromCurPointListData(id, count);
                 refreshGroup();
             });
         }
@@ -194,8 +209,10 @@ public class FindLayer : LayerBase
         }
     }
      
-    void changeGetListData(int id,int count)
+    void changeGetListData(int id,int count,int index = -1)
     {
+        int count_copy = count;
+
         var getList = GameData.getInstance().curGetRewardList;
         if (count > 0)
         {
@@ -213,8 +230,8 @@ public class FindLayer : LayerBase
                     }
                     else
                     {
-                        getList[i].value += (maxInBag - getList[i].value);
                         isAddCount += (maxInBag - getList[i].value);
+                        getList[i].value += (maxInBag - getList[i].value);
                     }
                     break;
                 }
@@ -237,46 +254,57 @@ public class FindLayer : LayerBase
         else if(count < 0)
         {
             int isDeleteCount = 0;
-            for (int i = getList.Count - 1; i >= 0 ; i--)
+            if (index >= 0)
             {
-                if (isDeleteCount < Mathf.Abs(count))
+                getList[index].value += count;
+                if (getList[index].value <= 0)
                 {
-                    if (getList[i].key == id)
+                    getList.RemoveAt(index);
+                }
+            }
+            else
+            {
+                for (int i = getList.Count - 1; i >= 0; i--)
+                {
+                    if (isDeleteCount < Mathf.Abs(count))
                     {
-                        if(getList[i].value >= Mathf.Abs(count))
+                        if (getList[i].key == id)
                         {
-                            isDeleteCount += Mathf.Abs(count);
-                        }
-                        else
-                        {
-                            isDeleteCount += getList[i].value;
-                        }
+                            if (getList[i].value >= Mathf.Abs(count))
+                            {
+                                isDeleteCount += Mathf.Abs(count);
+                            }
+                            else
+                            {
+                                isDeleteCount += getList[i].value;
+                            }
 
-                        getList[i].value += count;
-                        if (getList[i].value <= 0)
-                        {
-                            getList.RemoveAt(i);
+                            getList[i].value += count;
+                            if (getList[i].value <= 0)
+                            {
+                                getList.RemoveAt(i);
+                            }
                         }
                     }
-                }
-                else
-                {
-                    break;
+                    else
+                    {
+                        break;
+                    }
                 }
             }
         }
     }
-
-    void changeWaitGetListData(int id, int count)
+    
+    void changeGetFromCurPointListData(int id, int count)
     {
-        for (int i = 0; i < waitGetList.Count; i++)
+        for (int i = 0; i < getFromCurPointList.Count; i++)
         {
-            if (waitGetList[i].key == id)
+            if (getFromCurPointList[i].key == id)
             {
-                waitGetList[i].value += count;
-                if (waitGetList[i].value <= 0)
+                getFromCurPointList[i].value += count;
+                if (getFromCurPointList[i].value <= 0)
                 {
-                    waitGetList.RemoveAt(i);
+                    getFromCurPointList.RemoveAt(i);
                 }
                 return;
             }
@@ -284,7 +312,49 @@ public class FindLayer : LayerBase
 
         if (count > 0)
         {
-            waitGetList.Add(new PairData(id, count));
+            getFromCurPointList.Add(new PairData(id, count));
+        }
+    }
+
+    int curPointGetCountById(int id)
+    {
+        for (int i = 0; i < getFromCurPointList.Count; i++)
+        {
+            if (getFromCurPointList[i].key == id)
+            {
+                return getFromCurPointList[i].value;
+            }
+        }
+
+        return 0;
+    }
+
+    void changeWaitGetListData(int id, int count)
+    {
+        if (count > 0)
+        {
+            int canBackCount = curPointGetCountById(id);
+            if (canBackCount > 0)
+            {
+                waitGetList.Add(new PairData(id, count > canBackCount ? canBackCount : count));
+            }
+        }
+        else if (count < 0)
+        {
+            for (int i = 0; i < waitGetList.Count; i++)
+            {
+                if (waitGetList[i].key == id)
+                {
+                    waitGetList[i].value += count;
+                    if (waitGetList[i].value <= 0)
+                    {
+                        waitGetList.RemoveAt(i);
+                    }
+
+                    return;
+                }
+            }
+            
         }
     }
     
@@ -294,9 +364,9 @@ public class FindLayer : LayerBase
         {
             int id = int.Parse(curChoiceItem_get.name.Split('_')[0]);
             int count = int.Parse(curChoiceItem_get.name.Split('_')[1]);
-
-            changeGetListData(id, -count);
+            changeGetListData(id, -count, curChoiceItem_get.GetSiblingIndex());
             changeWaitGetListData(id, count);
+            changeGetFromCurPointListData(id, count > curPointGetCountById(id) ? -curPointGetCountById(id) : -count);
 
             refreshGroup();
         }
@@ -323,6 +393,7 @@ public class FindLayer : LayerBase
         for(int i = 0; i < waitGetList.Count; i++)
         {
             changeGetListData(waitGetList[i].key, waitGetList[i].value);
+            changeGetFromCurPointListData(waitGetList[i].key, waitGetList[i].value);
         }
         waitGetList.Clear();
         
@@ -336,8 +407,9 @@ public class FindLayer : LayerBase
             int id = int.Parse(curChoiceItem_waitGet.name.Split('_')[0]);
             int count = int.Parse(curChoiceItem_waitGet.name.Split('_')[1]);
 
-            changeGetListData(id,count);
+            changeGetListData(id, count);
             changeWaitGetListData(id, -count);
+            changeGetFromCurPointListData(id, count);
 
             refreshGroup();
         }
