@@ -10,6 +10,7 @@ public class MapData
     public int energy;
     public int floor;
     public int nextFloorPoint;
+    public int enemy;
 }
 
 public class MapEntity

@@ -13,6 +13,7 @@ public class MapLayer : LayerBase
     public GameObject searchPoint;
     public Image img_map;
     public Image img_atkRange;
+    public Image img_player;
 
     int player_id;
     int curMap = 2;
@@ -33,6 +34,9 @@ public class MapLayer : LayerBase
 
         curMap = startData.data_int;
         player_id = int.Parse(startData.data_string);
+        tili = PlayerEntity.getInstance().getDataById(player_id).energy;
+        img_player.sprite = CommonUtil.getSprite("Images/player" + player_id);
+        img_player.SetNativeSize();
 
         // 方格点击事件
         for (int i = 0; i < squares.childCount; i++)
@@ -80,6 +84,15 @@ public class MapLayer : LayerBase
         }
         
         showCanToSquare();
+
+        // 扣除进入地图体力
+        {
+            List<MapData> list = MapEntity.getInstance().getDataByMapFloor(curMap, 1);
+            if (list.Count > 0)
+            {
+                changeTiLi(-list[0].energy);
+            }
+        }
     }
     
     void Update()
@@ -134,10 +147,10 @@ public class MapLayer : LayerBase
         }
 
         // 添加敌人
-        if (list[0].energy != 0)
+        if (list[0].enemy != 0)
         {
-            addEnemy(floor, list[0].energy);
-            setAtkRange(floor, list[0].energy);
+            addEnemy(floor, list[0].enemy);
+            setAtkRange(floor, list[0].enemy);
         }
 
         showCanToSquare();

@@ -78,7 +78,7 @@ public class FindLayer : LayerBase
                 int count = 1;
                 int realChangeCount = changeGetListData(id, -count, index);
                 changeWaitGetListData(id, -realChangeCount);
-                changeGetFromCurPointListData(id, realChangeCount > curPointGetCountById(id) ? -curPointGetCountById(id) : -realChangeCount);
+                changeGetFromCurPointListData(id, Mathf.Abs(realChangeCount) > curPointGetCountById(id) ? -curPointGetCountById(id) : realChangeCount);
                 refreshGroup();
             });
         }
@@ -101,7 +101,6 @@ public class FindLayer : LayerBase
                 int id = int.Parse(temp.name.Split('_')[0]);
                 int count = 1;
                 int realChangeCount = changeGetListData(id, count);
-                Debug.Log(realChangeCount);
                 changeWaitGetListData(id, -realChangeCount);
                 changeGetFromCurPointListData(id, realChangeCount);
                 refreshGroup();
@@ -222,7 +221,7 @@ public class FindLayer : LayerBase
         }
     }
      
-    int changeGetListData(int id,int count,int index = -1,int restSquare = 0)
+    int changeGetListData(int id,int count,int index = -1)
     {
         Debug.Log("左边变化：" + id + "  " + count);
         int count_copy = count;
@@ -256,7 +255,7 @@ public class FindLayer : LayerBase
                 int restCount = (count - isAddCount);
                 for(int i = 0; i < restCount / maxInBag; i++)
                 {
-                    if(getList.Count >= (canUseSquareCount - restSquare))
+                    if(getList.Count >= canUseSquareCount)
                     {
                         break;
                     }
@@ -266,7 +265,7 @@ public class FindLayer : LayerBase
 
                 if (restCount % maxInBag > 0)
                 {
-                    if (getList.Count < (canUseSquareCount - restSquare))
+                    if (getList.Count < canUseSquareCount)
                     {
                         getList.Add(new PairData(id, restCount % maxInBag));
                         isAddCount += restCount % maxInBag;
@@ -403,8 +402,8 @@ public class FindLayer : LayerBase
             int id = int.Parse(curChoiceItem_get.name.Split('_')[0]);
             int count = int.Parse(curChoiceItem_get.name.Split('_')[1]);
             int realChangeCount = changeGetListData(id, -count, curChoiceItem_get.GetSiblingIndex());
-            changeWaitGetListData(id, realChangeCount);
-            changeGetFromCurPointListData(id, realChangeCount > curPointGetCountById(id) ? -curPointGetCountById(id) : -realChangeCount);
+            changeWaitGetListData(id, -realChangeCount);
+            changeGetFromCurPointListData(id, Mathf.Abs(realChangeCount) > curPointGetCountById(id) ? -curPointGetCountById(id) : realChangeCount);
 
             refreshGroup();
         }
@@ -432,7 +431,7 @@ public class FindLayer : LayerBase
         while(waitGetList.Count > 0)
         {
             int id = waitGetList[0].key;
-            int realChangeCount = changeGetListData(id, waitGetList[0].value,-1,1);
+            int realChangeCount = changeGetListData(id, waitGetList[0].value,-1);
             changeWaitGetListData(id, -realChangeCount);
             changeGetFromCurPointListData(id, realChangeCount);
 
