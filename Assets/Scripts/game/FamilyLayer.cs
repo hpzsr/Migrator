@@ -26,6 +26,11 @@ public class FamilyLayer : LayerBase
     public List<Transform> list_bed = new List<Transform>();
     public List<Transform> list_ladder = new List<Transform>();
 
+    public Transform trans_workbench;
+    public Transform trans_toy;
+    public Transform trans_vase;
+    public Transform trans_gitar;
+
     void Start()
     {
         s_instance = this;
@@ -45,7 +50,7 @@ public class FamilyLayer : LayerBase
             {
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(false,getMousePosition());
+                    curControlPlayer.moveTo(Consts.MoveEndEvent.Nothing, getMousePosition());
                 });
             }
             else if (trans.tag == "Player")
@@ -75,7 +80,7 @@ public class FamilyLayer : LayerBase
                 list_bed.Add(trans);
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(false, trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(Consts.MoveEndEvent.Nothing, trans.transform.localPosition, trans);
                 });
             }
             else if (trans.tag == "ladder")
@@ -84,30 +89,55 @@ public class FamilyLayer : LayerBase
             }
             else if (trans.tag == "workbench")
             {
+                trans_workbench = trans;
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(false, trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(Consts.MoveEndEvent.Make, trans.transform.localPosition, trans);
+                });
+            }
+            else if (trans.tag == "toy")
+            {
+                trans_toy = trans;
+                trans.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    curControlPlayer.moveTo(Consts.MoveEndEvent.Toy, trans.transform.localPosition, trans_workbench);
+                });
+            }
+            else if (trans.tag == "vase")
+            {
+                trans_vase = trans;
+                trans.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    curControlPlayer.moveTo(Consts.MoveEndEvent.Vase, trans.transform.localPosition, trans_workbench);
+                });
+            }
+            else if (trans.tag == "gitar")
+            {
+                trans_gitar = trans;
+                trans.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    curControlPlayer.moveTo(Consts.MoveEndEvent.Gitar, trans.transform.localPosition, trans_workbench);
                 });
             }
             else if (trans.tag == "heater")
             {
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(false, trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(Consts.MoveEndEvent.Nothing, trans.transform.localPosition, trans);
                 });
             }
             else if (trans.tag == "kitchen")
             {
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(false, trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(Consts.MoveEndEvent.Make, trans.transform.localPosition, trans);
                 });
             }
             else if (trans.tag == "find")
             {
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(false, trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(Consts.MoveEndEvent.Find, trans.transform.localPosition, trans);
                 });
             }
         }
@@ -162,25 +192,12 @@ public class FamilyLayer : LayerBase
         {
             case 0:
                 {
-                    image.color = new Color(1, 1, 1, 0.47f);
+                    image.color = new Color(100.0f / 255.0f, 100.0f / 255.0f, 100.0f / 255.0f, 120.0f / 255.0f);
                     break;
                 }
-
-            case 1:
+            default:
                 {
-                    image.color = new Color(1, 0, 0, 1);
-                    break;
-                }
-
-            case 2:
-                {
-                    image.color = new Color(0, 1, 0, 1);
-                    break;
-                }
-
-            case 3:
-                {
-                    image.color = new Color(0, 0, 1, 1);
+                    image.color = new Color(1,1,1,1);
                     break;
                 }
         }

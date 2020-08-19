@@ -18,7 +18,6 @@ public class MakeLayer : LayerBase
     Transform curTrans = null;
     List<PairData> needmaterialList = new List<PairData>();
 
-    bool isCanUpgrade = true;
     int curChoiceMakeItem;
 
     void Start()
@@ -122,8 +121,6 @@ public class MakeLayer : LayerBase
 
     void setMaterialList(int makeid)
     {
-        isCanUpgrade = true;
-
         for (int i = 0; i < materialList.childCount; i++)
         {
             Destroy(materialList.GetChild(i).gameObject);
@@ -152,10 +149,6 @@ public class MakeLayer : LayerBase
             int id = int.Parse(id_count[0]);
             int need_count = int.Parse(id_count[1]);
             int have_count = GameData.getInstance().getBagItemCount(id);
-            if (have_count < need_count)
-            {
-                isCanUpgrade = false;
-            }
 
             needmaterialList.Add(new PairData(id, need_count));
 
@@ -188,6 +181,11 @@ public class MakeLayer : LayerBase
 
     public void onClickBuild()
     {
+        if(GameData.getInstance().getUnLockPartById(curChoiceMakeItem) != null)
+        {
+            return;
+        }
+
         for (int i = 0; i < needmaterialList.Count; i++)
         {
             GameData.getInstance().changeBagItemCount(needmaterialList[i].key, -needmaterialList[i].value);
@@ -202,8 +200,8 @@ public class MakeLayer : LayerBase
         }
         else if (curTrans.tag == "workbench")
         {
-            ToastScript.show(PartsEntity.getInstance().getDataById(curChoiceMakeItem,1).name + " +1");
+            GameData.getInstance().addPart(curChoiceMakeItem);
+            ToastScript.show("Unlock " + PartsEntity.getInstance().getDataById(curChoiceMakeItem,1).name);
         }
-        
     }
 }

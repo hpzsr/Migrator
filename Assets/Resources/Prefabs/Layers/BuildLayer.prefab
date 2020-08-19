@@ -1353,7 +1353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.990566, g: 0.18222679, b: 0.18222679, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1515,7 +1515,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 165.8, y: -13.199951}
-  m_SizeDelta: {x: 124, y: 127}
+  m_SizeDelta: {x: 127, y: 122}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8338919940486259878
 CanvasRenderer:
@@ -1545,7 +1545,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: f63994a1d1ea41741a4440e59841d5aa, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1724,7 +1724,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 291, y: -13.199951}
-  m_SizeDelta: {x: 124, y: 127}
+  m_SizeDelta: {x: 209, y: 141}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5381238966825720634
 CanvasRenderer:
@@ -1754,7 +1754,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: f63994a1d1ea41741a4440e59841d5aa, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2106,7 +2106,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 40, y: -13.2}
-  m_SizeDelta: {x: 124, y: 127}
+  m_SizeDelta: {x: 210, y: 155}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3536201220856317399
 CanvasRenderer:
@@ -2136,7 +2136,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: f63994a1d1ea41741a4440e59841d5aa, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

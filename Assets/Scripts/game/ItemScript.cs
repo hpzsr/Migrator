@@ -32,6 +32,9 @@ public class ItemScript : MonoBehaviour
             id = 302;
             isCanUpgrade = true;
             setItemLevel(0);
+
+            // 食物
+            setCanEatFoods();
         }
         else if (transform.tag == "heater")
         {
@@ -42,6 +45,24 @@ public class ItemScript : MonoBehaviour
         else if (transform.tag == "workbench")
         {
             id = 304;
+            isCanUpgrade = true;
+            setItemLevel(0);
+        }
+        else if (transform.tag == "toy")
+        {
+            id = 305;
+            isCanUpgrade = true;
+            setItemLevel(0);
+        }
+        else if (transform.tag == "vase")
+        {
+            id = 306;
+            isCanUpgrade = true;
+            setItemLevel(0);
+        }
+        else if (transform.tag == "gitar")
+        {
+            id = 307;
             isCanUpgrade = true;
             setItemLevel(0);
         }
@@ -69,7 +90,7 @@ public class ItemScript : MonoBehaviour
             Button btn_upgrade = transform.Find("btn_upgrade").GetComponent<Button>();
             btn_upgrade.onClick.AddListener(()=>
             {
-                FamilyLayer.s_instance.curControlPlayer.moveTo(true, transform.localPosition, transform);
+                FamilyLayer.s_instance.curControlPlayer.moveTo(Consts.MoveEndEvent.Upgrade, transform.localPosition, transform);
             });
         }
 
@@ -81,8 +102,21 @@ public class ItemScript : MonoBehaviour
 
     public void setItemLevel(int _level)
     {
-        level = _level;
-        FamilyLayer.s_instance.setColorByLevel(self_img, level);
+        // 玩偶、花瓶、吉他
+        if(id >= 305 && id <= 307)
+        {
+            level = _level;
+            self_img.sprite = CommonUtil.getSprite("Images/" + id);
+            self_img.SetNativeSize();
+            FamilyLayer.s_instance.setColorByLevel(self_img, level);
+        }
+        else
+        {
+            level = _level;
+            self_img.sprite = CommonUtil.getSprite("Images/" + id + "_" + level);
+            self_img.SetNativeSize();
+            FamilyLayer.s_instance.setColorByLevel(self_img, level);
+        }
     }
 
     public void addItemLevel(int _level)
@@ -109,6 +143,56 @@ public class ItemScript : MonoBehaviour
         if (count > 0)
         {
             rewardList.Add(new PairData(id, count));
+        }
+    }
+    
+    public void setCanEatFoods()
+    {
+        List<int> list = new List<int>();
+        if (GameData.getInstance().getBagItemCount(209) > 0)
+        {
+            list.Add(209);
+        }
+        if (GameData.getInstance().getBagItemCount(210) > 0)
+        {
+            list.Add(210);
+        }
+        if (GameData.getInstance().getBagItemCount(211) > 0)
+        {
+            list.Add(211);
+        }
+
+        if(list.Count > 0)
+        {
+            transform.Find("foods").localScale = new Vector3(1, 1, 1);
+            for (int i = 1; i <= 3; i++)
+            {
+                Button btn = transform.Find("foods/food_" + i).GetComponent<Button>();
+                if (i <= list.Count)
+                {
+                    int food_id = list[i - 1];
+                    btn.transform.localScale = new Vector3(1, 1, 1);
+
+                    Image icon = btn.transform.GetComponent<Image>();
+                    icon.sprite = CommonUtil.getSprite("Images/" + list[i - 1]);
+
+                    Text text_count = btn.transform.Find("count").GetComponent<Text>();
+                    text_count.text = "x"+GameData.getInstance().getBagItemCount(list[i - 1]).ToString();
+                    btn.onClick.RemoveAllListeners();
+                    btn.onClick.AddListener(()=>
+                    {
+                        FamilyLayer.s_instance.curControlPlayer.moveTo((Consts.MoveEndEvent)food_id, transform.localPosition,transform);
+                    });
+                }
+                else
+                {
+                    btn.transform.localScale = new Vector3(0, 0, 0);
+                }
+            }
+        }
+        else
+        {
+            transform.Find("foods").localScale = new Vector3(0, 0, 0);
         }
     }
 }

@@ -97,7 +97,7 @@ public class BuildLayer : LayerBase
                     unlock.GetChild(i + 1).localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     Image image = unlock.GetChild(i + 1).GetComponent<Image>();
                     image.sprite = CommonUtil.getSprite("Images/" + str_value_array[i]);
-                    //image.SetNativeSize();
+                    image.SetNativeSize();
                 }
             }
         }

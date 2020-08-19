@@ -70,9 +70,9 @@ public class PlayerScript : MonoBehaviour
     }
 
     // 移动到指定地点
-    public void moveTo(bool isUpgrade,Vector2 targetPos,Transform targetTrans = null)
+    public void moveTo(Consts.MoveEndEvent moveEndEvent, Vector2 targetPos,Transform targetTrans = null)
     {
-        if(move_seq != null)
+        if (move_seq != null)
         {
             move_seq.Kill();
         }
@@ -142,13 +142,13 @@ public class PlayerScript : MonoBehaviour
             if(targetTrans != null)
             {
                 ItemScript itemScript = targetTrans.GetComponent<ItemScript>();
-                if (itemScript.isCanUpgrade && isUpgrade)
+                if (itemScript.isCanUpgrade && moveEndEvent == Consts.MoveEndEvent.Upgrade)
                 {
                     var data = new Event.EventCallBackData();
                     data.data_transform = targetTrans;
                     LayerManager.showLayer(Consts.Layer.BuildLayer, data);
                 }
-                else if(targetTrans.tag == "find")
+                else if (moveEndEvent == Consts.MoveEndEvent.Find)
                 {
                     var data = new Event.EventCallBackData();
                     data.data_transform = targetTrans;
@@ -156,7 +156,7 @@ public class PlayerScript : MonoBehaviour
                     data.data_string = playerID + "";
                     LayerManager.showLayer(Consts.Layer.FindLayer, data);
                 }
-                else if ((targetTrans.tag == "kitchen") || (targetTrans.tag == "workbench"))
+                else if (moveEndEvent == Consts.MoveEndEvent.Make)
                 {
                     if (itemScript.level > 0)
                     {
@@ -170,6 +170,58 @@ public class PlayerScript : MonoBehaviour
                         data.data_transform = targetTrans;
                         LayerManager.showLayer(Consts.Layer.BuildLayer, data);
                     }
+                }
+                else if (moveEndEvent == Consts.MoveEndEvent.Toy)
+                {
+                    if (FamilyLayer.s_instance.trans_workbench.GetComponent<ItemScript>().level > 0)
+                    {
+                        if (FamilyLayer.s_instance.trans_toy.GetComponent<ItemScript>().level == 0)
+                        {
+                            var data = new Event.EventCallBackData();
+                            data.data_transform = targetTrans;
+                            LayerManager.showLayer(Consts.Layer.MakeLayer, data);
+                        }
+                        else
+                        {
+                        }
+                    }
+                }
+                else if (moveEndEvent == Consts.MoveEndEvent.Vase)
+                {
+                    if (FamilyLayer.s_instance.trans_workbench.GetComponent<ItemScript>().level > 0)
+                    { 
+                        if (FamilyLayer.s_instance.trans_vase.GetComponent<ItemScript>().level == 0)
+                        {
+                            var data = new Event.EventCallBackData();
+                            data.data_transform = targetTrans;
+                            LayerManager.showLayer(Consts.Layer.MakeLayer, data);
+                        }
+                        else
+                        {
+                        }
+                    }
+                }
+                else if (moveEndEvent == Consts.MoveEndEvent.Gitar)
+                {
+                    if (FamilyLayer.s_instance.trans_workbench.GetComponent<ItemScript>().level > 0)
+                    {
+                        if (FamilyLayer.s_instance.trans_gitar.GetComponent<ItemScript>().level == 0)
+                        {
+                            var data = new Event.EventCallBackData();
+                            data.data_transform = targetTrans;
+                            LayerManager.showLayer(Consts.Layer.MakeLayer, data);
+                        }
+                        else
+                        {
+                        }
+                    }
+                }
+                else if (moveEndEvent >= Consts.MoveEndEvent.Food_209)
+                {
+                    GameData.getInstance().changeBagItemCount((int)moveEndEvent,-1);
+                    targetTrans.GetComponent<ItemScript>().setCanEatFoods();
+
+                    ToastScript.show("Eat " + MaterialsEntity.getInstance().getDataById((int)moveEndEvent).name);
                 }
             }
         });

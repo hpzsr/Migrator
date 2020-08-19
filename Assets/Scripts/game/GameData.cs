@@ -17,6 +17,7 @@ public class PairData
 public class GameData
 {
     public List<PairData> myBagsList = new List<PairData>();
+    public List<PairData> unLockList = new List<PairData>();
     public List<PairData> curGetRewardList = new List<PairData>();
 
     public static GameData s_instance = null;
@@ -37,7 +38,7 @@ public class GameData
         {
             for (int i = 0; i < MaterialsEntity.getInstance().dataList.Count; i++)
             {
-                //myBagsList.Add(new PairData(MaterialsEntity.getInstance().dataList[i].id, 1000));
+                myBagsList.Add(new PairData(MaterialsEntity.getInstance().dataList[i].id, 1000));
             }
         }
     }
@@ -69,6 +70,45 @@ public class GameData
         if (count > 0)
         {
             myBagsList.Add(new PairData(id, count));
+        }
+    }
+
+    public PairData getUnLockPartById(int id)
+    {
+        for(int i = 0; i < unLockList.Count; i++)
+        {
+            if(unLockList[i].key == id)
+            {
+                return unLockList[i];
+            }
+        }
+
+        return null;
+    }
+
+    public void addPart(int id)
+    {
+        for (int i = 0; i < unLockList.Count; i++)
+        {
+            if (unLockList[i].key == id)
+            {
+                return;
+            }
+        }
+
+        unLockList.Add(new PairData(id, 1));
+
+        if(id == 305)
+        {
+            FamilyLayer.s_instance.trans_toy.GetComponent<ItemScript>().setItemLevel(1);
+        }
+        else if (id == 306)
+        {
+            FamilyLayer.s_instance.trans_vase.GetComponent<ItemScript>().setItemLevel(1);
+        }
+        else if (id == 307)
+        {
+            FamilyLayer.s_instance.trans_gitar.GetComponent<ItemScript>().setItemLevel(1);
         }
     }
 }

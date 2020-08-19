@@ -47,4 +47,18 @@ public class Consts
         ReadyNightLayer,
         MakeLayer,
     }
+
+    public enum MoveEndEvent
+    {
+        Nothing,
+        Upgrade,
+        Make,
+        Find,
+        Food_209 = 209,
+        Food_210 = 210,
+        Food_211 = 211,
+        Toy,
+        Vase,
+        Gitar
+    }
 }
