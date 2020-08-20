@@ -30,6 +30,7 @@ public class FamilyLayer : LayerBase
     public Transform trans_toy;
     public Transform trans_vase;
     public Transform trans_gitar;
+    public Transform trans_kitchen;
 
     void Start()
     {
@@ -128,6 +129,7 @@ public class FamilyLayer : LayerBase
             }
             else if (trans.tag == "kitchen")
             {
+                trans_kitchen = trans;
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     curControlPlayer.moveTo(Consts.MoveEndEvent.Make, trans.transform.localPosition, trans);
@@ -148,6 +150,16 @@ public class FamilyLayer : LayerBase
 
     void Update()
     {
+        // 增加背包数据
+        if(Input.GetKeyDown(KeyCode.A))
+        {
+            for (int i = 201; i <= 208; i++)
+            {
+                GameData.getInstance().changeBagItemCount(i,1000);
+            }
+
+            ToastScript.show("Add materials success");
+        }
     }
 
     private void onInvoke()
@@ -157,6 +169,19 @@ public class FamilyLayer : LayerBase
             curControlPlayer = list_player[0];
             curControlPlayer.setIsChoice(true);
         }
+    }
+
+    public PlayerScript getPlayerScriptById(int id)
+    {
+        for(int i = 0; i < list_player.Count; i++)
+        {
+            if(list_player[i].playerID == id)
+            {
+                return list_player[i];
+            }
+        }
+
+        return null;
     }
 
     public float getFloorPosY(int floor)

@@ -14,6 +14,8 @@ public class PlayerScript : MonoBehaviour
     Sequence move_seq = null;
     Vector2 beforePostion;
 
+    List<PlayerSelfData> self_data = new List<PlayerSelfData>();
+
     void Start()
     {
         img_choice = transform.Find("choice").GetComponent<Image>();
@@ -36,6 +38,45 @@ public class PlayerScript : MonoBehaviour
     {
         transform.localPosition = new Vector3(transform.localPosition.x, FamilyLayer.s_instance.getFloorPosY(floor), 0);
         beforePostion = transform.localPosition;
+
+        PlayerData playerData  = PlayerEntity.getInstance().getDataById(playerID);
+        self_data.Add(new PlayerSelfData(playerID, 501, playerData.energy, playerData.energy));
+        self_data.Add(new PlayerSelfData(playerID, 502, playerData.mind, playerData.mind));
+        self_data.Add(new PlayerSelfData(playerID, 503, playerData.power, playerData.power));
+    }
+
+    public void changePlayerSelfData(Consts.PlayerInfo type,int value)
+    {
+        for(int i = 0; i < self_data.Count; i++)
+        {
+            if(self_data[i].type == (int)type)
+            {
+                self_data[i].curData += value;
+                if(self_data[i].curData > self_data[i].fullData)
+                {
+                    self_data[i].curData = self_data[i].fullData;
+                }
+                break;
+            }
+        }
+
+        if(FamilyLayer.s_instance.curControlPlayer != null)
+        {
+            FamilyLayer.s_instance.curControlPlayer.setInfo();
+        }
+    }
+
+    public int getPlayerSelfDataByType(Consts.PlayerInfo type)
+    {
+        for(int i = 0; i < self_data.Count; i++)
+        {
+            if(self_data[i].type == (int)type)
+            {
+                return self_data[i].curData;
+            }
+        }
+
+        return 0;
     }
 
     // 设置该人物是否被选中、控制
@@ -63,9 +104,9 @@ public class PlayerScript : MonoBehaviour
         if (playerData != null)
         {
             playerInfo.Find("name").GetComponent<Text>().text = playerData.name;
-            playerInfo.Find("txt_501").GetComponent<Text>().text = "0/" + playerData.energy;
-            playerInfo.Find("txt_502").GetComponent<Text>().text = "0/" + playerData.mind;
-            playerInfo.Find("txt_503").GetComponent<Text>().text = "0/" + playerData.power;
+            playerInfo.Find("txt_501").GetComponent<Text>().text = getPlayerSelfDataByType(Consts.PlayerInfo.Energy) + "/" + playerData.energy;
+            playerInfo.Find("txt_502").GetComponent<Text>().text = getPlayerSelfDataByType(Consts.PlayerInfo.Mind) + "/" + playerData.mind;
+            playerInfo.Find("txt_503").GetComponent<Text>().text = getPlayerSelfDataByType(Consts.PlayerInfo.Power) + "/" + playerData.power;
         }
     }
 
@@ -221,7 +262,15 @@ public class PlayerScript : MonoBehaviour
                     GameData.getInstance().changeBagItemCount((int)moveEndEvent,-1);
                     targetTrans.GetComponent<ItemScript>().setCanEatFoods();
 
-                    ToastScript.show("Eat " + MaterialsEntity.getInstance().getDataById((int)moveEndEvent).name);
+                    MaterialsData materialsData = MaterialsEntity.getInstance().getDataById((int)moveEndEvent);
+                    string[] buff_array = materialsData.value.Split(';');
+                    for(int i = 0; i < buff_array.Length; i++)
+                    {
+                        int type = int.Parse(buff_array[i].Split(':')[0]);
+                        int value = int.Parse(buff_array[i].Split(':')[1]);
+                        changePlayerSelfData((Consts.PlayerInfo)type, value);
+                    }
+                    ToastScript.show("Eat " + materialsData.name);
                 }
             }
         });

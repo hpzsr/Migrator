@@ -59,6 +59,13 @@ public class Consts
         Food_211 = 211,
         Toy,
         Vase,
-        Gitar
+        Gitar,
+    }
+
+    public enum PlayerInfo
+    {
+        Energy = 501,
+        Mind,
+        Power
     }
 }

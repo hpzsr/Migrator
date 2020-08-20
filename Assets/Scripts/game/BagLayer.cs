@@ -12,11 +12,13 @@ public class BagLayer : LayerBase
     {
         for(int i = 0; i < GameData.getInstance().myBagsList.Count; i++)
         {
-            GameObject obj = GameObject.Instantiate(item, listContent);
-
             PairData pairData = GameData.getInstance().myBagsList[i];
-            obj.transform.Find("icon").GetComponent<Image>().sprite = CommonUtil.getSprite("Images/" + pairData.key);
-            obj.transform.Find("count").GetComponent<Text>().text = pairData.value.ToString();
+            if(pairData.key != 209 && pairData.key != 210 && pairData.key != 211)
+            {
+                GameObject obj = GameObject.Instantiate(item, listContent);
+                obj.transform.Find("icon").GetComponent<Image>().sprite = CommonUtil.getSprite("Images/" + pairData.key);
+                obj.transform.Find("count").GetComponent<Text>().text = pairData.value.ToString();
+            }
         }
     }
     

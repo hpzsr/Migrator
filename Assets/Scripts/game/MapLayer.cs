@@ -87,6 +87,7 @@ public class MapLayer : LayerBase
 
         // 扣除进入地图体力
         {
+            int tili = FamilyLayer.s_instance.getPlayerScriptById(player_id).getPlayerSelfDataByType(Consts.PlayerInfo.Energy);
             List<MapData> list = MapEntity.getInstance().getDataByMapFloor(curMap, 1);
             if (list.Count > 0)
             {
@@ -102,6 +103,7 @@ public class MapLayer : LayerBase
 
     void changeTiLi(int value)
     {
+        FamilyLayer.s_instance.getPlayerScriptById(player_id).changePlayerSelfData(Consts.PlayerInfo.Energy, value);
         tili += value;
         text_tili.text = tili.ToString();
     }

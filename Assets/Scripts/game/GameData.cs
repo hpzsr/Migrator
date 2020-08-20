@@ -14,6 +14,22 @@ public class PairData
     }
 }
 
+public class PlayerSelfData
+{
+    public int playerId;
+    public int type;
+    public int curData;
+    public int fullData;
+
+    public PlayerSelfData(int _playerId, int _type, int _curData,int _fullData)
+    {
+        playerId = _playerId;
+        type = _type;
+        curData = _curData;
+        fullData = _fullData;
+    }
+}
+
 public class GameData
 {
     public List<PairData> myBagsList = new List<PairData>();
@@ -34,13 +50,7 @@ public class GameData
 
     void init()
     {
-        // 背包
-        {
-            for (int i = 0; i < MaterialsEntity.getInstance().dataList.Count; i++)
-            {
-                myBagsList.Add(new PairData(MaterialsEntity.getInstance().dataList[i].id, 1000));
-            }
-        }
+        
     }
 
     public int getBagItemCount(int id)

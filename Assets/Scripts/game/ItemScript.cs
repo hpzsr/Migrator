@@ -170,8 +170,10 @@ public class ItemScript : MonoBehaviour
                 Button btn = transform.Find("foods/food_" + i).GetComponent<Button>();
                 if (i <= list.Count)
                 {
-                    int food_id = list[i - 1];
+                    btn.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(60, 60);
                     btn.transform.localScale = new Vector3(1, 1, 1);
+
+                    int food_id = list[i - 1];
 
                     Image icon = btn.transform.GetComponent<Image>();
                     icon.sprite = CommonUtil.getSprite("Images/" + list[i - 1]);
@@ -186,6 +188,7 @@ public class ItemScript : MonoBehaviour
                 }
                 else
                 {
+                    btn.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
                     btn.transform.localScale = new Vector3(0, 0, 0);
                 }
             }

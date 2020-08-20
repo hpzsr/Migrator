@@ -190,12 +190,12 @@ public class MakeLayer : LayerBase
         {
             GameData.getInstance().changeBagItemCount(needmaterialList[i].key, -needmaterialList[i].value);
         }
-
-        GameData.getInstance().changeBagItemCount(curChoiceMakeItem, 1);
+        
         setMaterialList(curChoiceMakeItem);
-
+        GameData.getInstance().changeBagItemCount(curChoiceMakeItem, 1);
         if (curTrans.tag == "kitchen")
         {
+            FamilyLayer.s_instance.trans_kitchen.GetComponent<ItemScript>().setCanEatFoods();
             ToastScript.show(MaterialsEntity.getInstance().getDataById(curChoiceMakeItem).name + " +1");
         }
         else if (curTrans.tag == "workbench")
