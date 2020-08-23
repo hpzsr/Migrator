@@ -16,9 +16,18 @@ public class PlayerScript : MonoBehaviour
 
     List<PlayerSelfData> self_data = new List<PlayerSelfData>();
 
+    Transform progress_bg;
+    Image img_progress;
+
+    bool isWorking = false;
+    float curMakeNeedTime = 10;
+    float curMakePassTime = 0;
+
     void Start()
     {
         img_choice = transform.Find("choice").GetComponent<Image>();
+        progress_bg = transform.Find("progress_bg");
+        img_progress = transform.Find("progress_bg/progress").GetComponent<Image>();
     }
     
     void Update()
@@ -32,6 +41,12 @@ public class PlayerScript : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
         beforePostion = transform.localPosition;
+
+        if(isWorking)
+        {
+            curMakePassTime += Time.deltaTime;
+            setMakeProgress(curMakePassTime / curMakeNeedTime);
+        }
     }
 
     public void init()
@@ -108,6 +123,11 @@ public class PlayerScript : MonoBehaviour
             playerInfo.Find("txt_502").GetComponent<Text>().text = getPlayerSelfDataByType(Consts.PlayerInfo.Mind) + "/" + playerData.mind;
             playerInfo.Find("txt_503").GetComponent<Text>().text = getPlayerSelfDataByType(Consts.PlayerInfo.Power) + "/" + playerData.power;
         }
+    }
+
+    public void startWork()
+    {
+        isWorking = true;
     }
 
     // 移动到指定地点
@@ -345,5 +365,18 @@ public class PlayerScript : MonoBehaviour
     public float getMoveTime(float juli)
     {
         return Mathf.Abs(juli * 0.005f) * 0.8f;
+    }
+
+    void setMakeProgress(float _progress)
+    {
+        if(_progress >= 1)
+        {
+            progress_bg.localScale = new Vector3(0,0,0);
+        }
+        else
+        {
+            progress_bg.localScale = new Vector3(1,1,1);
+        }
+        img_progress.fillAmount = _progress;
     }
 }

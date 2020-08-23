@@ -166,6 +166,8 @@ public class BuildLayer : LayerBase
 
             checkUpgrade();
 
+            FamilyLayer.s_instance.curControlPlayer.startWork();
+
             Destroy(gameObject);
         }
     }
