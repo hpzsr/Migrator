@@ -154,6 +154,12 @@ public class BuildLayer : LayerBase
 
     public void onClickBuild()
     {
+        if(itemScript.partState != Consts.PartState.Normal)
+        {
+            ToastScript.show("Need to finish building this");
+            return;
+        }
+
         if(isCanUpgrade)
         {
             for(int i = 0; i < needmaterialList.Count; i++)
@@ -161,12 +167,12 @@ public class BuildLayer : LayerBase
                 GameData.getInstance().changeBagItemCount(needmaterialList[i].key, -needmaterialList[i].value);
             }
             
-            itemScript.addItemLevel(1);
-            setMaterialList();
+            //itemScript.addItemLevel(1);
+            //setMaterialList();
 
-            checkUpgrade();
+            //checkUpgrade();
 
-            FamilyLayer.s_instance.curControlPlayer.startWork();
+            itemScript.startBuild();
 
             Destroy(gameObject);
         }

@@ -68,4 +68,16 @@ public class Consts
         Mind,
         Power
     }
+
+    public enum PartState
+    {
+        Normal,
+        Building,
+    }
+
+    public enum PartMakeState
+    {
+        Normal,
+        Making,
+    }
 }

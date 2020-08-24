@@ -16,18 +16,11 @@ public class PlayerScript : MonoBehaviour
 
     List<PlayerSelfData> self_data = new List<PlayerSelfData>();
 
-    Transform progress_bg;
-    Image img_progress;
-
-    bool isWorking = false;
-    float curMakeNeedTime = 10;
-    float curMakePassTime = 0;
+    ItemScript curLookPart = null;
 
     void Start()
     {
         img_choice = transform.Find("choice").GetComponent<Image>();
-        progress_bg = transform.Find("progress_bg");
-        img_progress = transform.Find("progress_bg/progress").GetComponent<Image>();
     }
     
     void Update()
@@ -41,12 +34,6 @@ public class PlayerScript : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
         beforePostion = transform.localPosition;
-
-        if(isWorking)
-        {
-            curMakePassTime += Time.deltaTime;
-            setMakeProgress(curMakePassTime / curMakeNeedTime);
-        }
     }
 
     public void init()
@@ -70,6 +57,10 @@ public class PlayerScript : MonoBehaviour
                 if(self_data[i].curData > self_data[i].fullData)
                 {
                     self_data[i].curData = self_data[i].fullData;
+                }
+                else if (self_data[i].curData < 0)
+                {
+                    self_data[i].curData = 0;
                 }
                 break;
             }
@@ -125,14 +116,14 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    public void startWork()
-    {
-        isWorking = true;
-    }
-
     // 移动到指定地点
     public void moveTo(Consts.MoveEndEvent moveEndEvent, Vector2 targetPos,Transform targetTrans = null)
     {
+        if (targetTrans)
+        {
+            curLookPart = targetTrans.GetComponent<ItemScript>();
+        }
+        
         if (move_seq != null)
         {
             move_seq.Kill();
@@ -202,8 +193,7 @@ public class PlayerScript : MonoBehaviour
         move_seq.Play().OnComplete(()=> {
             if(targetTrans != null)
             {
-                ItemScript itemScript = targetTrans.GetComponent<ItemScript>();
-                if (itemScript.isCanUpgrade && moveEndEvent == Consts.MoveEndEvent.Upgrade)
+                if (curLookPart.isCanUpgrade && moveEndEvent == Consts.MoveEndEvent.Upgrade)
                 {
                     var data = new Event.EventCallBackData();
                     data.data_transform = targetTrans;
@@ -219,7 +209,7 @@ public class PlayerScript : MonoBehaviour
                 }
                 else if (moveEndEvent == Consts.MoveEndEvent.Make)
                 {
-                    if (itemScript.level > 0)
+                    if (curLookPart.level > 0)
                     {
                         var data = new Event.EventCallBackData();
                         data.data_transform = targetTrans;
@@ -250,7 +240,7 @@ public class PlayerScript : MonoBehaviour
                 else if (moveEndEvent == Consts.MoveEndEvent.Vase)
                 {
                     if (FamilyLayer.s_instance.trans_workbench.GetComponent<ItemScript>().level > 0)
-                    { 
+                    {
                         if (FamilyLayer.s_instance.trans_vase.GetComponent<ItemScript>().level == 0)
                         {
                             var data = new Event.EventCallBackData();
@@ -279,12 +269,12 @@ public class PlayerScript : MonoBehaviour
                 }
                 else if (moveEndEvent >= Consts.MoveEndEvent.Food_209)
                 {
-                    GameData.getInstance().changeBagItemCount((int)moveEndEvent,-1);
+                    GameData.getInstance().changeBagItemCount((int)moveEndEvent, -1);
                     targetTrans.GetComponent<ItemScript>().setCanEatFoods();
 
                     MaterialsData materialsData = MaterialsEntity.getInstance().getDataById((int)moveEndEvent);
                     string[] buff_array = materialsData.value.Split(';');
-                    for(int i = 0; i < buff_array.Length; i++)
+                    for (int i = 0; i < buff_array.Length; i++)
                     {
                         int type = int.Parse(buff_array[i].Split(':')[0]);
                         int value = int.Parse(buff_array[i].Split(':')[1]);
@@ -365,18 +355,5 @@ public class PlayerScript : MonoBehaviour
     public float getMoveTime(float juli)
     {
         return Mathf.Abs(juli * 0.005f) * 0.8f;
-    }
-
-    void setMakeProgress(float _progress)
-    {
-        if(_progress >= 1)
-        {
-            progress_bg.localScale = new Vector3(0,0,0);
-        }
-        else
-        {
-            progress_bg.localScale = new Vector3(1,1,1);
-        }
-        img_progress.fillAmount = _progress;
     }
 }

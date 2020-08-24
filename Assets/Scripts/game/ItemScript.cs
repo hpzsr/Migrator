@@ -13,7 +13,33 @@ public class ItemScript : MonoBehaviour
 
     public List<PairData> rewardList = new List<PairData>();
 
+    Transform btn_upgrade = null;
+
+    // 升级相关
+    Transform progress_bg;
+    Image img_progress;
+    float curBuildNeedTime = 10;
+    float curBuildPassTime = 0;
+    public Consts.PartState partState = Consts.PartState.Normal;
+
+    // 制作相关
+    public int curMakeType = 0;
+    public float curMakeNeedTime = 10;
+    public float curMakePassTime = 0;
+    public Consts.PartMakeState partMakeState = Consts.PartMakeState.Normal;
+
     void Start()
+    {
+        btn_upgrade = transform.Find("btn_upgrade");
+        progress_bg = transform.Find("progress_bg");
+        if (progress_bg)
+        {
+            img_progress = transform.Find("progress_bg/progress").GetComponent<Image>();
+            progress_bg.localScale = new Vector3(0, 0, 0);
+        }
+    }
+
+    void Update()
     {
     }
 
@@ -125,6 +151,96 @@ public class ItemScript : MonoBehaviour
         setItemLevel(level);
     }
 
+    public void startMake(int type)
+    {
+        curMakeType = type;
+        if (transform.tag == "kitchen")
+        {
+            curMakeNeedTime = int.Parse(MaterialsEntity.getInstance().getDataById(type).cooktime);
+        }
+        else if (transform.tag == "workbench")
+        {
+            curMakeNeedTime = PartsEntity.getInstance().getDataById(type, 1).createtime;
+        }
+        
+        curMakeNeedTime = 0.1f;
+        partMakeState = Consts.PartMakeState.Making;
+    }
+
+    public void stopMake()
+    {
+        curMakePassTime = 0;
+        partMakeState = Consts.PartMakeState.Normal;
+        GameData.getInstance().changeBagItemCount(curMakeType, 1);
+
+        if (transform.tag == "kitchen")
+        {
+            setCanEatFoods();
+            ToastScript.show(MaterialsEntity.getInstance().getDataById(curMakeType).name + " +1");
+        }
+        else if (transform.tag == "workbench")
+        {
+            GameData.getInstance().addPart(curMakeType);
+            ToastScript.show("Unlock " + PartsEntity.getInstance().getDataById(curMakeType, 1).name);
+        }
+    }
+
+    public void startBuild()
+    {
+        curBuildNeedTime = PartsEntity.getInstance().getDataById(id, level + 1).createtime;
+        curBuildNeedTime = 0.1f;
+        partState = Consts.PartState.Building;
+    }
+
+    public void stopBuild()
+    {
+        curBuildPassTime = 0;
+        partState = Consts.PartState.Normal;
+        progress_bg.localScale = new Vector3(0, 0, 0);
+    }
+
+    public void addTime(float hour)
+    {
+        if (checkHasPlayerAround())
+        {
+            if (partState == Consts.PartState.Building)
+            {
+                curBuildPassTime += hour;
+                setBuildProgress(curBuildPassTime / curBuildNeedTime);
+                //btn_upgrade.localScale = new Vector3(0,0,0);
+            }
+            else
+            {
+                if (btn_upgrade)
+                {
+                    //btn_upgrade.localScale = new Vector3(1, 1, 1);
+                }
+            }
+
+            if (partMakeState == Consts.PartMakeState.Making)
+            {
+                curMakePassTime += hour;
+                if (curMakePassTime >= curMakeNeedTime)
+                {
+                    stopMake();
+                }
+            }
+        }
+    }
+
+    bool checkHasPlayerAround()
+    {
+        for(int i = 0; i < FamilyLayer.s_instance.list_player.Count; i++)
+        {
+            if(CommonUtil.twoObjDistance_2D(transform.localPosition, FamilyLayer.s_instance.list_player[i].transform.localPosition) <= 10)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void changeRewardListData(int id, int count)
     {
         for (int i = 0; i < rewardList.Count; i++)
@@ -197,5 +313,19 @@ public class ItemScript : MonoBehaviour
         {
             transform.Find("foods").localScale = new Vector3(0, 0, 0);
         }
+    }
+
+    void setBuildProgress(float _progress)
+    {
+        if (_progress >= 1)
+        {
+            stopBuild();
+            addItemLevel(1);
+        }
+        else
+        {
+            progress_bg.localScale = new Vector3(1, 1, 1);
+        }
+        img_progress.fillAmount = _progress;
     }
 }

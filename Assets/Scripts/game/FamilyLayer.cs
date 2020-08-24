@@ -20,11 +20,12 @@ public class FamilyLayer : LayerBase
     bool isBeyond12 = false;
     bool isBeyond19 = false;
 
-    List<PlayerScript> list_player = new List<PlayerScript>();
+    public List<PlayerScript> list_player = new List<PlayerScript>();
     public PlayerScript curControlPlayer;
 
     public List<Transform> list_bed = new List<Transform>();
     public List<Transform> list_ladder = new List<Transform>();
+    public List<ItemScript> list_item = new List<ItemScript>();
 
     public Transform trans_workbench;
     public Transform trans_toy;
@@ -45,6 +46,7 @@ public class FamilyLayer : LayerBase
             if(trans.GetComponent<ItemScript>() != null)
             {
                 trans.GetComponent<ItemScript>().init();
+                list_item.Add(trans.GetComponent<ItemScript>());
             }
 
             if (trans.name == "alphaSpace")
@@ -248,6 +250,12 @@ public class FamilyLayer : LayerBase
         curTime += hour;
         setCurTime();
 
+        // 建造和制作时间
+        for(int i = 0; i < list_item.Count; i++)
+        {
+            list_item[i].addTime(hour);
+        }
+
         // 到了12点自动进入探索
         if((curTime >= 12) && (curTime < 13))
         {
@@ -291,5 +299,14 @@ public class FamilyLayer : LayerBase
         isBeyond19 = false;
 
         setCurTime();
+
+        // 人物属性扣除
+        {
+            for(int i = 0; i < list_player.Count; i++)
+            {
+                list_player[i].changePlayerSelfData(Consts.PlayerInfo.Energy, -20);
+                list_player[i].changePlayerSelfData(Consts.PlayerInfo.Power, -20);
+            }
+        }
     }
 }

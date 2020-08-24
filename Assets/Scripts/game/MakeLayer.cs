@@ -18,7 +18,8 @@ public class MakeLayer : LayerBase
     Transform curTrans = null;
     List<PairData> needmaterialList = new List<PairData>();
 
-    int curChoiceMakeItem;
+    int curChoiceMakeItem = 0;
+    bool isInit = false;
 
     void Start()
     {
@@ -28,6 +29,38 @@ public class MakeLayer : LayerBase
         curChoiceMakeItem = int.Parse(PartsEntity.getInstance().getDataById(itemScript.id, itemScript.level).value.Split(':')[0]);
         setCanMakeItem();
         setMaterialList(curChoiceMakeItem);
+        isInit = true;
+    }
+
+    void Update()
+    {
+        if (isInit && itemScript != null)
+        {
+            if(itemScript.partMakeState == Consts.PartMakeState.Making)
+            {
+                Image curMakeItemProgress = null;
+                for(int i = 0; i < makeList.childCount; i++)
+                {
+                    if(makeList.GetChild(i).name == itemScript.curMakeType.ToString())
+                    {
+                        curMakeItemProgress = makeList.GetChild(i).Find("progress_bg/progress").GetComponent<Image>();
+                        break;
+                    }
+                }
+                if (curMakeItemProgress)
+                {
+                    curMakeItemProgress.transform.parent.localScale = new Vector3(1, 1, 1);
+                    setMakeProgress(curMakeItemProgress, itemScript.curMakePassTime / itemScript.curMakeNeedTime);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < makeList.childCount; i++)
+                {
+                    makeList.GetChild(i).Find("progress_bg").localScale = new Vector3(0,0,0);
+                }
+            }
+        }
     }
 
     void setCanMakeItem()
@@ -50,6 +83,7 @@ public class MakeLayer : LayerBase
             int id = int.Parse(str_food_array[i]);
 
             GameObject obj = GameObject.Instantiate(MakeItemDemo,makeList);
+            obj.transform.name = id.ToString();
 
             Image icon = obj.transform.Find("icon").GetComponent<Image>();
             icon.sprite = CommonUtil.getSprite("Images/" + id);
@@ -186,22 +220,32 @@ public class MakeLayer : LayerBase
             return;
         }
 
+        if (itemScript.partMakeState == Consts.PartMakeState.Making)
+        {
+            if (curTrans.tag == "kitchen")
+            {
+                ToastScript.show("Need to finish this food");
+            }
+            else if (curTrans.tag == "workbench")
+            {
+                ToastScript.show("Need to finish making this");
+            }
+
+            return;
+        }
+
         for (int i = 0; i < needmaterialList.Count; i++)
         {
             GameData.getInstance().changeBagItemCount(needmaterialList[i].key, -needmaterialList[i].value);
         }
         
         setMaterialList(curChoiceMakeItem);
-        GameData.getInstance().changeBagItemCount(curChoiceMakeItem, 1);
-        if (curTrans.tag == "kitchen")
-        {
-            FamilyLayer.s_instance.trans_kitchen.GetComponent<ItemScript>().setCanEatFoods();
-            ToastScript.show(MaterialsEntity.getInstance().getDataById(curChoiceMakeItem).name + " +1");
-        }
-        else if (curTrans.tag == "workbench")
-        {
-            GameData.getInstance().addPart(curChoiceMakeItem);
-            ToastScript.show("Unlock " + PartsEntity.getInstance().getDataById(curChoiceMakeItem,1).name);
-        }
+
+        itemScript.startMake(curChoiceMakeItem);
+    }
+
+    void setMakeProgress(Image img, float _progress)
+    {
+        img.fillAmount = _progress;
     }
 }
