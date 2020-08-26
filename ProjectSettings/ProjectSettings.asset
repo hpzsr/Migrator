@@ -566,6 +566,7 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
+    Collab: 1
     UNet: 1
   luminIcon:
     m_Name: 
@@ -586,10 +587,10 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 6
-  cloudProjectId: 3977d925-1c98-4b67-aa71-dfa04e13528e
+  cloudProjectId: 82806465-7455-4f6b-8310-c78ea08d3cff
   framebufferDepthMemorylessMode: 0
   projectName: Migrator
-  organizationId: cindyhan124
+  organizationId: s3713900
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

@@ -54,12 +54,15 @@ public class Consts
         Upgrade,
         Make,
         Find,
-        Food_209 = 209,
-        Food_210 = 210,
-        Food_211 = 211,
         Toy,
         Vase,
         Gitar,
+        Bed,
+
+        // 不能往后插
+        Food_209 = 209,
+        Food_210 = 210,
+        Food_211 = 211,
     }
 
     public enum PlayerInfo

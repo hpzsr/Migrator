@@ -35,7 +35,7 @@ public class MapLayer : LayerBase
         curMap = startData.data_int;
         player_id = int.Parse(startData.data_string);
         tili = PlayerEntity.getInstance().getDataById(player_id).energy;
-        img_player.sprite = CommonUtil.getSprite("Images/player" + player_id);
+        img_player.sprite = CommonUtil.getSprite("Images/characters/player" + player_id);
         img_player.SetNativeSize();
 
         // 方格点击事件

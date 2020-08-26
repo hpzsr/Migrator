@@ -6,7 +6,15 @@ public class LayerManager
 {
     public static GameObject showLayer(Consts.Layer layerName, Event.EventCallBackData data = null)
     {
-        GameObject layer = CommonUtil.createObjFromPrefab(GameObject.Find("Canvas").transform, "Prefabs/Layers/" + layerName.ToString());
+        GameObject layer = null;
+        if (layerName == Consts.Layer.FamilyLayer)
+        {
+            layer = CommonUtil.createObjFromPrefab(GameObject.Find("Canvas").transform, "Prefabs/Layers/" + layerName.ToString());
+        }
+        else
+        {
+            layer = CommonUtil.createObjFromPrefab(GameObject.Find("Canvas_High").transform, "Prefabs/Layers/" + layerName.ToString());
+        }
         layer.GetComponent<LayerBase>().startData = data;
 
         return layer;

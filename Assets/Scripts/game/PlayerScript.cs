@@ -18,9 +18,17 @@ public class PlayerScript : MonoBehaviour
 
     ItemScript curLookPart = null;
 
+    Animator animator = null;
+    Transform body = null;
+
     void Start()
     {
         img_choice = transform.Find("choice").GetComponent<Image>();
+        body = transform.Find("body");
+        if(body)
+        {
+            animator = body.GetComponent<Animator>();
+        }
     }
     
     void Update()
@@ -122,6 +130,35 @@ public class PlayerScript : MonoBehaviour
         if (targetTrans)
         {
             curLookPart = targetTrans.GetComponent<ItemScript>();
+
+            for(int i = 0; i < FamilyLayer.s_instance.list_item.Count; i++)
+            {
+                Transform trans = FamilyLayer.s_instance.list_item[i].transform;
+                Transform white_img = trans.Find("white");
+                if (white_img)
+                {
+                    if (trans != targetTrans)
+                    {
+                        white_img.localScale = new Vector3(0, 0, 0);
+                    }
+                    else
+                    {
+                        white_img.localScale = new Vector3(1,1,1);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < FamilyLayer.s_instance.list_item.Count; i++)
+            {
+                Transform trans = FamilyLayer.s_instance.list_item[i].transform;
+                Transform white_img = trans.Find("white");
+                if (white_img)
+                {
+                    white_img.localScale = new Vector3(0, 0, 0);
+                }
+            }
         }
         
         if (move_seq != null)
@@ -177,9 +214,9 @@ public class PlayerScript : MonoBehaviour
         }
 
         move_seq = DOTween.Sequence();
+        float time = 0;
         for (int i = 0; i < list_passPoint.Count; i++)
         {
-            float time = 0;
             if (i == 0)
             {
                 time = getMoveTime(CommonUtil.twoObjDistance_2D(transform.localPosition, list_passPoint[i]));
@@ -190,8 +227,18 @@ public class PlayerScript : MonoBehaviour
             }
             move_seq.Append(self_img.rectTransform.DOAnchorPos(list_passPoint[i], time).SetEase(Ease.Linear));
         }
+
+        if (time != 0 && animator)
+        {
+            animator.Play("kidWalking");
+        }
         move_seq.Play().OnComplete(()=> {
-            if(targetTrans != null)
+            if (animator)
+            {
+                animator.Play("kidstanding");
+            }
+
+            if (targetTrans != null)
             {
                 if (curLookPart.isCanUpgrade && moveEndEvent == Consts.MoveEndEvent.Upgrade)
                 {
@@ -265,6 +312,13 @@ public class PlayerScript : MonoBehaviour
                         else
                         {
                         }
+                    }
+                }
+                else if (moveEndEvent == Consts.MoveEndEvent.Bed)
+                {
+                    if (animator && curLookPart.level > 0)
+                    {
+                        //animator.Play("kidlying");
                     }
                 }
                 else if (moveEndEvent >= Consts.MoveEndEvent.Food_209)
@@ -354,6 +408,6 @@ public class PlayerScript : MonoBehaviour
     // 根据距离计算移动时间，保持匀速
     public float getMoveTime(float juli)
     {
-        return Mathf.Abs(juli * 0.005f) * 0.8f;
+        return Mathf.Abs(juli * 0.005f) * 1.5f;
     }
 }

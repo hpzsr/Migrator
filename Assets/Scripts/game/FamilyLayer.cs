@@ -53,7 +53,26 @@ public class FamilyLayer : LayerBase
             {
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(Consts.MoveEndEvent.Nothing, getMousePosition());
+                    float pianyi = 250;
+                    bool isMove = false;
+                    Vector2 vec2 = getMousePosition();
+                    if ((vec2.y >= floor1.transform.localPosition.y) && (vec2.y - floor1.transform.localPosition.y) <= pianyi)
+                    {
+                        isMove = true;
+                    }
+                    else if ((vec2.y >= floor2.transform.localPosition.y) && (vec2.y - floor2.transform.localPosition.y) <= pianyi)
+                    {
+                        isMove = true;
+                    }
+                    else if ((vec2.y >= floor3.transform.localPosition.y) && (vec2.y - floor3.transform.localPosition.y) <= pianyi)
+                    {
+                        isMove = true;
+                    }
+
+                    if (isMove)
+                    {
+                        curControlPlayer.moveTo(Consts.MoveEndEvent.Nothing, vec2);
+                    }
                 });
             }
             else if (trans.tag == "Player")
@@ -83,7 +102,7 @@ public class FamilyLayer : LayerBase
                 list_bed.Add(trans);
                 trans.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    curControlPlayer.moveTo(Consts.MoveEndEvent.Nothing, trans.transform.localPosition, trans);
+                    curControlPlayer.moveTo(Consts.MoveEndEvent.Bed, trans.transform.localPosition, trans);
                 });
             }
             else if (trans.tag == "ladder")
