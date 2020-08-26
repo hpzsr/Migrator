@@ -10,6 +10,7 @@ public class MapLayer : LayerBase
     public Transform player;
     public Transform squares;
     public Transform searchPoints;
+    public Transform hand;
     public GameObject searchPoint;
     public Image img_map;
     public Image img_atkRange;
@@ -54,12 +55,12 @@ public class MapLayer : LayerBase
                     else if (btn.GetComponent<Image>().color.g > 0)
                     {
                         hideRedSquare();
-                        btn.GetComponent<Image>().color = new Color(1,0,0,0.5f);
+                        btn.GetComponent<Image>().color = new Color(1, 0, 0, 0.5f);
                     }
                     else
                     {
                         // 人物站在搜索点上
-                        if((player.localPosition == btn.transform.localPosition))
+                        if ((player.localPosition == btn.transform.localPosition))
                         {
                             for (int j = 0; j < searchPoint_list.Count; j++)
                             {
@@ -82,7 +83,7 @@ public class MapLayer : LayerBase
                 Debug.Log(squares.GetChild(i).name);
             }
         }
-        
+
         showCanToSquare();
 
         // 扣除进入地图体力
@@ -95,10 +96,22 @@ public class MapLayer : LayerBase
             }
         }
     }
-    
+
     void Update()
     {
-        
+        hand.localPosition = FamilyLayer.s_instance.getMousePosition();
+        for (int i = 0; i < searchPoint_list.Count; i++)
+        {
+            if (CommonUtil.twoObjDistance_2D(FamilyLayer.s_instance.getMousePosition(), searchPoint_list[i].position * 100) < 50)
+            {
+                Cursor.visible = false;
+                hand.localScale = new Vector3(1, 1, 1);
+                return;
+            }
+        }
+
+        Cursor.visible = true;
+        hand.localScale = new Vector3(0, 0, 0);
     }
 
     void changeTiLi(int value)
@@ -134,7 +147,7 @@ public class MapLayer : LayerBase
             }
         }
 
-        List<MapData> list = MapEntity.getInstance().getDataByMapFloor(curMap,floor);
+        List<MapData> list = MapEntity.getInstance().getDataByMapFloor(curMap, floor);
 
         // 添加搜索点
         for (int i = 0; i < list.Count; i++)
@@ -182,7 +195,7 @@ public class MapLayer : LayerBase
         enemy.floor = floor;
     }
 
-    void setFloorPoint(int floor,int square)
+    void setFloorPoint(int floor, int square)
     {
         img_map.sprite = CommonUtil.getSprite("Images/mapfloor_" + floor);
 
@@ -216,12 +229,12 @@ public class MapLayer : LayerBase
 
         int num = int.Parse(targetTrans.name.Split('_')[1]);
         curInSquare = num;
-        player.GetComponent<Image>().rectTransform.DOAnchorPos(targetTrans.localPosition, 0.5f).SetEase(Ease.Linear).OnComplete(()=>
+        player.GetComponent<Image>().rectTransform.DOAnchorPos(targetTrans.localPosition, 0.5f).SetEase(Ease.Linear).OnComplete(() =>
         {
             checkIsAtk();
 
             showCanToSquare();
-            
+
             for (int i = 0; i < searchPoint_list.Count; i++)
             {
                 if (searchPoint_list[i].localPosition == targetTrans.transform.localPosition)
@@ -235,7 +248,7 @@ public class MapLayer : LayerBase
                 }
             }
 
-            if(nextFloor)
+            if (nextFloor)
             {
                 if (nextFloor.transform.localPosition == targetTrans.transform.localPosition)
                 {
@@ -247,7 +260,7 @@ public class MapLayer : LayerBase
 
     void checkIsAtk()
     {
-        if((curInSquare == atkRangeSquare) ||
+        if ((curInSquare == atkRangeSquare) ||
            (curInSquare == (atkRangeSquare - 1)) ||
            (curInSquare == (atkRangeSquare + 1)) ||
            (curInSquare == (atkRangeSquare + 6)) ||
@@ -263,14 +276,14 @@ public class MapLayer : LayerBase
 
     void showCanToSquare()
     {
-        for(int i = 0; i < squares.childCount; i++)
+        for (int i = 0; i < squares.childCount; i++)
         {
             Transform trans = squares.GetChild(i);
             Image img = trans.GetComponent<Image>();
             int num = int.Parse(trans.name.Split('_')[1]);
-            if(Mathf.Abs(curInSquare - num) == 6)
+            if (Mathf.Abs(curInSquare - num) == 6)
             {
-                img.color = new Color(0,1,0,0.5f);
+                img.color = new Color(0, 1, 0, 0.5f);
             }
             else if (Mathf.Abs(curInSquare - num) == 1)
             {

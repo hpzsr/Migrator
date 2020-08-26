@@ -130,35 +130,6 @@ public class PlayerScript : MonoBehaviour
         if (targetTrans)
         {
             curLookPart = targetTrans.GetComponent<ItemScript>();
-
-            for(int i = 0; i < FamilyLayer.s_instance.list_item.Count; i++)
-            {
-                Transform trans = FamilyLayer.s_instance.list_item[i].transform;
-                Transform white_img = trans.Find("white");
-                if (white_img)
-                {
-                    if (trans != targetTrans)
-                    {
-                        white_img.localScale = new Vector3(0, 0, 0);
-                    }
-                    else
-                    {
-                        white_img.localScale = new Vector3(1,1,1);
-                    }
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < FamilyLayer.s_instance.list_item.Count; i++)
-            {
-                Transform trans = FamilyLayer.s_instance.list_item[i].transform;
-                Transform white_img = trans.Find("white");
-                if (white_img)
-                {
-                    white_img.localScale = new Vector3(0, 0, 0);
-                }
-            }
         }
         
         if (move_seq != null)

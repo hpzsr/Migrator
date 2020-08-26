@@ -374,6 +374,7 @@ public class CommonUtil
 
     static public bool uiPosIsInContent(Vector2 vec2, Transform content, object size = null)
     {
+        //Debug.Log("uiPosIsInContent----" + vec2 + "   " + content.transform.position);
         float pivot_y = content.GetComponent<RectTransform>().pivot.y;
 
         float x = content.transform.position.x;

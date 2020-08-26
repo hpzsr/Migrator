@@ -421,6 +421,15 @@ public class FindLayer : LayerBase
             itemScript.changeRewardListData(getList[i].key, -getList[i].value);
         }
 
+        if(waitGetList.Count == 0)
+        {
+            Transform white_img = itemScript.transform.Find("white");
+            if(white_img)
+            {
+                white_img.localScale = new Vector3(0,0,0);
+            }
+        }
+
         s_instance = null;
         Destroy(gameObject);
     }
